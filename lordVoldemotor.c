@@ -48,8 +48,8 @@ task drive{
 		}
 		else {
  */
-			float forward = (float) filter(vexRT[Ch2]);
-			float turn = (float) filter(vexRT[Ch4]);
+			float forward = (float) filter(vexRT[Ch3]);
+			float turn = (float) filter(vexRT[Ch1]);
 			motor[frontLeft] = DRIVESPEED*(forward + turn);
 			motor[backLeft] = DRIVESPEED*(forward + turn);
 
@@ -63,16 +63,16 @@ task arm{
 	while (true){
 		if (vexRT[Btn6U] == 1){
 			while (vexRT[Btn6U] == 1){
-				motor[armLeft] = 127;
-				motor[armRight] = 127;
+				motor[armLeft] = -127;
+				motor[armRight] = -127;
 			}
 			motor[armLeft] = 0;
 			motor[armRight] = 0;
 		}
 		else if (vexRT[Btn6D] == 1){
 			while (vexRT[Btn6D] == 1){
-				motor[armLeft] = -127;
-				motor[armRight] = -127;
+				motor[armLeft] = 127;
+				motor[armRight] = 127;
 			}
 			motor[armLeft] = 0;
 			motor[armRight] = 0;
@@ -88,13 +88,13 @@ task claw{
 			while (vexRT[Btn5U] == 1){
 				motor[clawMotor] = 127;
 			}
-			motor[clawMotor] = 10;
+			motor[clawMotor] = 0;
 		}
 		else if (vexRT[Btn5D] == 1){
 			while (vexRT[Btn5D] == 1){
 				motor[clawMotor] = -127;
 			}
-			motor[clawMotor] = 0;
+			motor[clawMotor] = 10;
 		}
 		wait1Msec(100);
 	}
@@ -122,10 +122,28 @@ void pre_auton(){
 }
 
 task autonomous(){
-	assignDriveMotors(127, 127);
-	wait1Msec(2000);
-    assignDriveMotors(0,0);
+  assignDriveMotors(127, 127);
+  wait1Msec(1000);
+  assignDriveMotors(0,0);
+  assignDriveMotors(-127, -127);
+  wait1Msec(500);
+  assignDriveMotors(0,0);
+  assignArmMotor(127);
+  wait1Msec(600);
+  assignArmMotor(0);
+  assignClawMotor(127);
+  wait1Msec(500);
+  assignClawMotor(0);
+  assignDriveMotors(127,127);
+  wait1Msec(600);
+  assignDriveMotors(0,0);
+  assignClawMotor(-127);
+  wait1Msec(500);
+  assignArmMotor(-127);
+  wait1Msec(1500);
+  assignArmMotor(0);
 }
+
 
 task usercontrol()
 {
