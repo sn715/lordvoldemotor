@@ -26,6 +26,9 @@
 #define DRIVESPEED 0.50 //ranges between 0 to 1
 #define ARCADE true //controls whether the drive is tank style (0) or arcade style (1)
 
+//Robot Starting Side...
+#define ROBOT_SIDE_LEFT true
+
 int filter (int input){
 	if (input > 20){
 		return input;
@@ -49,7 +52,7 @@ task drive{
 		else {
  */
 			float forward = (float) filter(vexRT[Ch3]);
-			float turn = (float) filter(vexRT[Ch1]);
+			float turn = ((float) filter(vexRT[Ch1])/2);
 			motor[frontLeft] = DRIVESPEED*(forward + turn);
 			motor[backLeft] = DRIVESPEED*(forward + turn);
 
@@ -121,27 +124,109 @@ void pre_auton(){
 
 }
 
+
+//Stack on Mobile Goal from Left Side
+void stackOnMobileFromLeft()
+{
+	assignDriveMotors(-50,127);  //Turn towards Mobile Goal
+	wait1Msec(1350);
+	assignDriveMotors(127,127);  //Run towards Mobile Goal
+	wait1Msec(2600);
+	assignDriveMotors(0,0);
+	
+	assignArmMotor(127);  //Arm Down
+	wait1Msec(500);
+	assignArmMotor(0);
+	
+	assignClawMotor(127); //Claw Open
+	wait1Msec(500);
+	assignClawMotor(0);
+	
+	assignDriveMotors(-127, -127); //Go back
+	wait1Msec(100);
+	assignDriveMotors(0, 0);
+}
+
+//Stack on Mobile Goal from Right Side
+void stackOnMobileFromRight()
+{
+	
+}
+
+
 task autonomous(){
-  assignDriveMotors(127, 127);
-  wait1Msec(1000);
-  assignDriveMotors(0,0);
-  assignDriveMotors(-127, -127);
-  wait1Msec(500);
-  assignDriveMotors(0,0);
-  assignArmMotor(127);
-  wait1Msec(600);
-  assignArmMotor(0);
-  assignClawMotor(127);
-  wait1Msec(500);
+	
+// Stack the preLoad onto Mobile Goal
+
+// _Grab the preLoad
+  assignClawMotor(127); //Claw Open
+  wait1Msec(400);
   assignClawMotor(0);
-  assignDriveMotors(127,127);
-  wait1Msec(600);
+
+  assignDriveMotors(127,-50);  //Turn towards pre-load
+  wait1Msec(850);
   assignDriveMotors(0,0);
-  assignClawMotor(-127);
+  assignDriveMotors(127,127);
   wait1Msec(500);
-  assignArmMotor(-127);
-  wait1Msec(1500);
+  assignDriveMotors(0,0);
+  assignClawMotor(-127);   //Grab pre-load
+  wait1Msec(1000);
+  assignArmMotor(-127);  //Arm up
+  wait1Msec(500);
   assignArmMotor(0);
+
+  //Stack on Mobile goal...
+  if(ROBOT_SIDE_LEFT) 
+  {
+    stackOnMobileFromLeft();
+  } else {
+    stackOnMobileFromRight();
+  }
+
+/*
+//No Points:: Grab the cone and drop it in the 20 point zone...
+	assignDriveMotors(127,-50);
+	wait1Msec(850);
+	assignDriveMotors(0,0);
+	assignDriveMotors(127,127);
+	wait1Msec(500);
+	assignDriveMotors(0,0);
+	assignClawMotor(-127); //Claw Close
+	wait1Msec(1000);
+	assignArmMotor(-127);  //Arm Up
+	wait1Msec(500);
+	assignArmMotor(0);
+	assignDriveMotors(127,-50);
+	wait1Msec(400);
+	assignDriveMotors(127,127); 
+	wait1Msec(1200);
+	assignDriveMotors(0,0);
+	assignArmMotor(127);  //Arm Down
+	wait1Msec(500);
+	assignArmMotor(0);
+	assignClawMotor(127); //Claw Open
+	wait1Msec(1000);
+	assignClawMotor(0);
+	
+	//shake arm 
+	assignArmMotor(-127); //Arm Up
+	wait1Msec(200);
+	assignArmMotor(127);  //Arm Down
+	wait1Msec(200);
+	assignArmMotor(0);
+	assignDriveMotors(-127,-127);  //Go Reverse
+	wait1Msec(2000);
+	
+	//Victory Dance
+	assignDriveMotors(0,0);
+	assignDriveMotors(127,-127);
+	wait1Msec(4000);
+  assignDriveMotors(-127,127);
+	wait1Msec(4000);
+	assignDriveMotors(0,0);
+*/
+	
+	
 }
 
 
